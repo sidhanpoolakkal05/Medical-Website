@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediConnect - Find Doctor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { background-color: #f7f9fc; color: #333; }
+
+    header {
+      background-color: #0d6efd; color: white; padding: 15px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    header h1 { cursor: pointer; transition: 0.3s; }
+    header h1:hover { color: #ffc107; }
+    nav a {
+      color: white; text-decoration: none; margin-left: 20px; font-weight: 500;
+      position: relative;
+    }
+    nav a::after {
+      content: ""; position: absolute; left: 0; bottom: -3px;
+      width: 0%; height: 2px; background: #ffc107; transition: 0.3s;
+    }
+    nav a:hover::after { width: 100%; }
+
+    .main-section {
+      display: flex; flex-wrap: wrap; padding: 40px 20px; gap: 30px; justify-content: center;
+      animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .filter-panel {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 25px;
+      width: 280px;
+      height: fit-content;
+      transition: 0.3s;
+    }
+    .filter-panel h3 {
+      color: #0d6efd;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .filter-group { margin-bottom: 20px; }
+    .filter-group label {
+      display: block; font-weight: 500; margin-bottom: 5px; color: #333;
+    }
+    .filter-panel input, .filter-panel select {
+      width: 100%; padding: 10px;
+      border: 1px solid #ccc; border-radius: 8px;
+      transition: 0.3s;
+    }
+    .filter-panel input:focus, .filter-panel select:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 8px rgba(13,110,253,0.3);
+      outline: none;
+    }
+
+    .suggestion-box {
+      background: #eaf3ff;
+      border-left: 4px solid #0d6efd;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      color: #0d6efd;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .doctor-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px; flex: 1;
+      min-width: 300px;
+    }
+    .doctor-card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    .doctor-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+    .doctor-card img {
+      width: 100px; height: 100px; border-radius: 50%;
+      border: 3px solid #0d6efd; margin-bottom: 10px; transition: 0.3s;
+    }
+    .doctor-card img:hover { transform: scale(1.05); border-color: #ffc107; }
+    .doctor-card h3 { color: #0d6efd; margin-bottom: 5px; }
+    .doctor-card p { color: #555; margin-bottom: 5px; }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #777;
+      font-size: 1.1em;
+      padding: 20px;
+    }
+
+    footer {
+      text-align: center;
+      background-color: #0d6efd; color: white;
+      padding: 15px 0; margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 onclick="location.href='index.html'">HealthHive</h1>
+    <nav>
+      <a href="indexOg.html">Home</a>
+      <a href="find-doctor.html">Find Doctor</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <section class="main-section">
+    <!-- Filter Sidebar -->
+    <aside class="filter-panel">
+      <h3>Find the Right Doctor</h3>
+      
+      <div class="filter-group">
+        <label for="search">Search by Disease / Symptom / Specialty</label>
+        <input type="text" id="search" placeholder="e.g. Fever, Cough, Toothache">
+        <div class="suggestion-box" id="suggestionBox"></div>
+      </div>
+
+      <div class="filter-group">
+        <label for="location">Location</label>
+        <select id="location">
+          <option value="">All Locations</option>
+          <option value="Delhi">Delhi</option>
+          <option value="Mumbai">Mumbai</option>
+          <option value="Bangalore">Bangalore</option>
+          <option value="kerala">kerala</option>
+          <option value="Malappuram">Malappuram</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Consultation Fee (max): <span id="feeValue">1000</span>₹</label>
+        <input type="range" id="fee" min="200" max="1500" step="100" value="1000">
+      </div>
+
+      <div class="filter-group">
+        <label>Experience (min): <span id="expValue">5</span> yrs</label>
+        <input type="range" id="experience" min="1" max="20" step="1" value="5">
+      </div>
+
+      <div class="filter-group">
+        <label for="gender">Gender</label>
+        <select id="gender">
+          <option value="">Any</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Doctor List -->
+    <div class="doctor-list" id="doctorList">
+      <div class="doctor-card" 
+           data-name="Dr. Priya Sharma" 
+           data-specialty="Cardiologist"
+           data-symptoms="heart pain, chest pain, high bp, fatigue"
+           data-location="Delhi" data-fee="800" data-exp="10" data-gender="Female"
+           onclick="location.href='priya.html'">
+        <img src="https://i.pravatar.cc/100?img=12" alt="Dr. Priya Sharma">
+        <h3>Dr. Priya Sharma</h3>
+        <p>Cardiologist</p>
+        <p>Fee: ₹800</p>
+        <p>Experience: 10 yrs</p>
+        <p>Location: Delhi</p>
+      </div>
+
+      <div class="doctor-card"
+           data-name="Dr. Arjun Mehta"
+           data-specialty="Neurologist"
+           data-symptoms="headache, migraine, sleep disorder, memory loss"
+           data-location="Mumbai" data-fee="1000" data-exp="8" data-gender="Male"
+           onclick="location.href='arjun.html'">
+        <img src="https://i.pravatar.cc/100?img=20" alt="Dr. Arjun Mehta">
+        <h3>Dr. Arjun Mehta</h3>
+        <p>Neurologist</p>
+        <p>Fee: ₹1000</p>
+        <p>Experience: 8 yrs</p>
+        <p>Location: Mumbai</p>
+      </div>
+
+      <div class="doctor-card"
+           data-name="Dr. Jose Antony"
+           data-specialty=" ENT Specialist "
+           data-symptoms="headache, migraine, sleep disorder, memory loss"
+           data-location="Malappuram" data-fee="1200" data-exp="20" data-gender="Male"
+           onclick="location.href='jose-Antony.html'">
+        <img src="https://i.pravatar.cc/100?img=58" alt="Dr. Arjun Mehta">
+        <h3>Dr. Jose Antony</h3>
+        <p> ENT Specialist</p>
+        <p>Fee: ₹1200</p>
+        <p>Experience: 20 yrs</p>
+        <p>Location: Malappuram</p>
+      </div>
+
+      <div class="doctor-card"
+           data-name=" Dr. Ruxana "
+           data-specialty="Dermatologist"
+           data-symptoms="hairfall, dandruff, skincare, pimple"
+           data-location="kerala" data-fee="900" data-exp="15" data-gender="Female"
+           onclick="location.href='Ruxana.html'">
+        <img src="https://i.pravatar.cc/100?img=48" alt="Dr. Arjun Mehta">
+        <h3>Dr. Ruxana</h3>
+        <p>Dermatologist</p>
+        <p>Fee: ₹900</p>
+        <p>Experience: 15 yrs</p>
+        <p>Location: kerala</p>
+      </div>
+
+      <div class="doctor-card"
+           data-name="Dr. Sneha Nair"
+           data-specialty="Dentist"
+           data-symptoms="tooth pain, cavity, gum bleeding, bad breath"
+           data-location="Bangalore" data-fee="600" data-exp="6" data-gender="Female"
+           onclick="location.href='sneha.html'">
+        <img src="https://i.pravatar.cc/100?img=32" alt="Dr. Sneha Nair">
+        <h3>Dr. Sneha Nair</h3>
+        <p>Dentist</p>
+        <p>Fee: ₹600</p>
+        <p>Experience: 6 yrs</p>
+        <p>Location: Bangalore</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 MediConnect | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    const fee = document.getElementById('fee');
+    const feeValue = document.getElementById('feeValue');
+    const exp = document.getElementById('experience');
+    const expValue = document.getElementById('expValue');
+    const inputs = document.querySelectorAll('#search, #location, #fee, #experience, #gender');
+    const suggestionBox = document.getElementById('suggestionBox');
+
+    // Common disease → doctor mapping
+    const suggestionMap = {
+      "fever": "General Physician or Pediatrician",
+      "cold": "ENT Specialist or General Physician",
+      "cough": "Pulmonologist or General Physician",
+      "toothache": "Dentist",
+      "headache": "Neurologist",
+      "chest pain": "Cardiologist",
+      "skin rash": "Dermatologist",
+      "stomach pain": "Gastroenterologist",
+      "depression": "Psychiatrist",
+      "joint pain": "Orthopedic Doctor",
+      "eye pain": "Ophthalmologist",
+      "ear pain": "ENT Specialist"
+    };
+
+    fee.addEventListener('input', () => feeValue.textContent = fee.value);
+    exp.addEventListener('input', () => expValue.textContent = exp.value);
+    inputs.forEach(input => input.addEventListener('input', applyFilters));
+
+    document.getElementById('search').addEventListener('input', function() {
+      const val = this.value.toLowerCase().trim();
+      const suggestion = Object.keys(suggestionMap).find(sym => val.includes(sym));
+      if (suggestion) {
+        suggestionBox.style.display = "block";
+        suggestionBox.textContent = `💡 You might want to see a ${suggestionMap[suggestion]}.`;
+      } else {
+        suggestionBox.style.display = "none";
+      }
+      applyFilters();
+    });
+
+    function applyFilters() {
+      const search = document.getElementById('search').value.toLowerCase().trim();
+      const location = document.getElementById('location').value;
+      const maxFee = parseInt(fee.value);
+      const minExp = parseInt(exp.value);
+      const gender = document.getElementById('gender').value;
+
+      const cards = document.querySelectorAll('.doctor-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        const specialty = card.dataset.specialty.toLowerCase();
+        const symptoms = card.dataset.symptoms.toLowerCase();
+        const docLoc = card.dataset.location;
+        const docFee = parseInt(card.dataset.fee);
+        const docExp = parseInt(card.dataset.exp);
+        const docGender = card.dataset.gender;
+
+        const matches =
+          (!search || name.includes(search) || specialty.includes(search) || symptoms.includes(search)) &&
+          (!location || location === docLoc) &&
+          docFee <= maxFee &&
+          docExp >= minExp &&
+          (!gender || gender === docGender);
+
+        card.style.display = matches ? "block" : "none";
+        if (matches) visibleCount++;
+      });
+
+      const noResultsMsg = document.querySelector('.no-results');
+      if (visibleCount === 0) {
+        if (!noResultsMsg) {
+          const msg = document.createElement('div');
+          msg.className = 'no-results';
+          msg.textContent = 'No matching doctors found.';
+          document.getElementById('doctorList').appendChild(msg);
+        }
+      } else if (noResultsMsg) {
+        noResultsMsg.remove();
+      }
+    }
+  </script>
+</body>
+</html>

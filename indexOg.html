@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeathHive - Find Your Doctor</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f7f9fc;
+      color: #333;
+    }
+
+    header {
+      background-color: #0d6efd;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+      background: linear-gradient(to right, #0d6efd, #47b5ff);
+      color: white;
+    }
+
+    .hero h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .hero input {
+      padding: 12px;
+      width: 280px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .hero button {
+      padding: 12px 25px;
+      background-color: white;
+      color: #0d6efd;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .hero button:hover {
+      background-color: #0056b3;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .categories {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .categories h3 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .category-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .category-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .category-card:hover {
+      background-color: #0d6efd;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .doctor-section {
+      padding: 40px 20px;
+    }
+
+    .doctor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .doctor-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .doctor-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    }
+
+    .doctor-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+
+    .doctor-card h4 {
+      color: #0d6efd;
+    }
+
+    .doctor-card button {
+      margin-top: 10px;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .doctor-card button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      background-color: #0d6efd;
+      color: white;
+      padding: 15px 0;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 600px) {
+      .hero h2 {
+        font-size: 24px;
+      }
+      .hero input {
+        width: 180px;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>HeathHive</h1>
+    <nav>
+      <a href="indexOg.html">Home</a>
+      <a href="find-doctor.html">Find Doctor</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1 style="font-weight: bold;
+    font-size: 50px;
+    font-family: arial, sans-serif;
+    margin-bottom: 20px;">HealthHive</h1>
+    <h2>Find the Right Doctor for Your Disease</h2>
+    <input id="searchInput" type="text" placeholder="Enter disease or symptom...">
+    <button id="findDoctorBtn">Find Doctor</button>
+  </section>
+
+  <section class="doctor-section">
+    <h3>Available Doctors</h3>
+    <div class="doctor-grid" id="doctorGrid">
+      <div class="doctor-card" data-specialty="cardiology heart chest blood pressure fever fatigue">
+        <img src="https://i.pravatar.cc/100?img=20" alt="Doctor">
+        <h4>Dr. Priya Sharma</h4>
+        <p>Cardiologist</p>
+        <p>Experience: 10 years</p>
+        <p>Location: Apollo Hospital, Delhi</p>
+        <a href="priya.html"><button>Book Appointment</button></a>
+      </div>
+
+      <div class="doctor-card" data-specialty="neurology brain nerves headache dizziness stroke">
+        <img src="https://i.pravatar.cc/100?img=12" alt="Doctor">
+        <h4>Dr. Arjun Mehta</h4>
+        <p>Neurologist</p>
+        <p>Experience: 8 years</p>
+        <p>Location: Fortis Hospital, Mumbai</p>
+        <a href="arjun.html"><button>Book Appointment</button></a>
+      </div>
+
+      <div class="doctor-card" data-specialty="dentistry teeth mouth cavity gum pain">
+        <img src="https://i.pravatar.cc/100?img=32" alt="Doctor">
+        <h4>Dr. Sneha Nair</h4>
+        <p>Dentist</p>
+        <p>Experience: 6 years</p>
+        <p>Location: Smile Dental Care, Bangalore</p>
+        <a href="sneha.html"><button>Book Appointment</button></a>
+      </div>
+
+      <div class="doctor-card" data-specialty="dermatology skin rash acne allergy itch">
+        <img src="https://i.pravatar.cc/100?img=48" alt="Doctor">
+        <h4>Dr. Ruxana</h4>
+        <p>Dermatologist</p>
+        <p>Experience: 12 years</p>
+        <p>Location: Skin Care Clinic, Pune</p>
+        <a href="Ruxana.html"><button>Book Appointment</button></a>
+      </div>
+
+      <div class="doctor-card" data-specialty="ent ear nose throat cough cold fever">
+        <img src="https://i.pravatar.cc/100?img=58" alt="Doctor">
+        <h4>Dr. Jose Antony</h4>
+        <p>ENT Specialist</p>
+        <p>Experience: 9 years</p>
+        <p>Location: ENT Care Hospital, Chennai</p>
+        <a href="Jose-Antony.html"><button>Book Appointment</button></a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 MediConnect | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const findDoctorBtn = document.getElementById('findDoctorBtn');
+    const doctorCards = document.querySelectorAll('.doctor-card');
+
+    // Function to filter doctors
+    function filterDoctors() {
+      const query = searchInput.value.trim().toLowerCase();
+      let found = false;
+
+      doctorCards.forEach(card => {
+        const specialties = card.dataset.specialty;
+        if (specialties.includes(query)) {
+          card.style.display = 'block';
+          found = true;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (!found && query.length > 0) {
+        console.log('No match for:', query);
+      }
+    }
+
+    // Filter when typing
+    searchInput.addEventListener('input', filterDoctors);
+
+    // Filter on button click too
+    findDoctorBtn.addEventListener('click', filterDoctors);
+  </script>
+</body>
+</html>

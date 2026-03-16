@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediConnect - Dr. Sneha Nair</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+    body { background-color: #f7f9fc; color: #333; overflow-x: hidden; }
+    header { background-color: #0d6efd; color: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { cursor: pointer; transition: 0.3s; }
+    header h1:hover { color: #ffc107; }
+    nav a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; position: relative; }
+    nav a::after { content: ""; position: absolute; left: 0; bottom: -3px; width: 0%; height: 2px; background: #ffc107; transition: 0.3s; }
+    nav a:hover::after { width: 100%; }
+
+    .profile-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; padding: 50px 20px; gap: 40px; animation: fadeIn 1.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .profile-card, .about-doctor {
+      background: white; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      padding: 30px; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .profile-card:hover, .about-doctor:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.15); }
+    .profile-card { max-width: 380px; text-align: center; }
+    .profile-card img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid #0d6efd; transition: 0.3s; }
+    .profile-card img:hover { transform: scale(1.05); border-color: #ffc107; }
+    .profile-card h2 { color: #0d6efd; }
+
+    .about-doctor { max-width: 600px; }
+    .about-doctor h3 { color: #0d6efd; margin-bottom: 10px; }
+
+    .appointment-form { margin-top: 30px; }
+    form { display: flex; flex-direction: column; gap: 15px; }
+    input, select, textarea { padding: 12px; border: 1px solid #ccc; border-radius: 8px; transition: 0.3s; }
+    input:focus, select:focus, textarea:focus { border-color: #0d6efd; box-shadow: 0 0 8px rgba(13,110,253,0.3); outline: none; }
+    button { padding: 12px; background-color: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    button:hover { background-color: #0056b3; transform: scale(1.03); }
+
+    .back-btn { background: none; color: #0d6efd; border: 2px solid #0d6efd; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+    .back-btn:hover { background-color: #0d6efd; color: white; transform: translateY(-2px); }
+
+    footer { text-align: center; background-color: #0d6efd; color: white; padding: 15px 0; margin-top: 50px; }
+
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 30px 40px; border-radius: 15px; text-align: center; animation: popIn 0.4s ease; }
+    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-content h2 { color: #0d6efd; margin-bottom: 10px; }
+    .modal-content p { margin-bottom: 20px; }
+  </style>
+  </style>
+</head>
+<body>
+  <header>
+    <h1 onclick="location.href='index.html'">HealthHive</h1>
+    <nav>
+      <a href="indexOg.html">Home</a>
+      <a href="#">Find Doctor</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <section class="profile-container">
+    <div class="profile-card">
+      <img src="https://i.pravatar.cc/150?img=32" alt="Dr. Sneha Nair">
+      <h2>Dr. Sneha Nair</h2>
+      <p><strong>Specialization:</strong> Dentist</p>
+      <p><strong>Experience:</strong> 6 years</p>
+      <p><strong>Clinic:</strong> Smile Dental Care, Bangalore</p>
+      <p><strong>Consultation Fee:</strong> ₹700</p>
+      <button class="back-btn" onclick="window.location.href='index.html'">← Back to Home</button>
+    </div>
+
+    <div class="about-doctor">
+      <h3>About Dr. Sneha Nair</h3>
+      <p>Dr. Sneha Nair is a passionate dental specialist known for her gentle approach and expertise in cosmetic dentistry. She focuses on providing pain-free treatments and educating patients about oral hygiene and long-term care.</p>
+
+      <div class="appointment-form">
+        <h3>Book an Appointment</h3>
+        <form id="formSneha">
+          <input type="text" placeholder="Your Full Name" required>
+          <input type="email" placeholder="Your Email" required>
+          <input type="tel" placeholder="Your Phone Number" required>
+          <label>Date:</label>
+          <input id="datePicker" type="date" required>
+          <select required>
+            <option value="">Select Time Slot</option>
+            <option>9:00 AM - 10:00 AM</option>
+            <option>11:00 AM - 12:00 PM</option>
+            <option>2:00 PM - 3:00 PM</option>
+            <option>4:00 PM - 5:00 PM</option>
+          </select>
+          <textarea rows="4" placeholder="Describe your symptoms..." required></textarea>
+          <button type="submit">Confirm Appointment</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="successModal">
+    <div class="modal-content">
+      <h2>✅ Appointment Confirmed!</h2>
+      <p>Your appointment with <strong>Dr. Sneha Nair</strong> has been successfully booked.</p>
+      <button onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <footer><p>© 2025 MediConnect | All Rights Reserved</p></footer>
+
+  <script>
+    const datePicker = document.getElementById('datePicker');
+    const today = new Date().toISOString().split('T')[0];
+    datePicker.setAttribute();
+
+    document.getElementById('formSneha').addEventListener('submit', e => {
+      e.preventDefault();
+      document.getElementById('successModal').style.display = 'flex';
+      e.target.reset();
+    });
+
+    function closeModal() { document.getElementById('successModal').style.display = 'none'; }
+    window.onclick = e => { if (e.target === document.getElementById('successModal')) closeModal(); };
+  </script>
+</body>
+</html>
